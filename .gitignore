@@ -8,6 +8,8 @@
 **/.terraform.lock.hcl
 !examples/**/.terraform.lock.hcl
 
+# terraform tfvars
+*.tfvars
 
 # keys
 *id_rsa*

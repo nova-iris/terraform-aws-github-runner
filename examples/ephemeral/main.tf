@@ -36,12 +36,13 @@ module "runners" {
   # Alternatively you can set the path to the lambda zip files here.
   #
   # For example grab zip files via lambda_download
-  # webhook_lambda_zip                = "../lambdas-download/webhook.zip"
-  # runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
-  # runners_lambda_zip                = "../lambdas-download/runners.zip"
+  webhook_lambda_zip                = "../lambdas-download/webhook.zip"
+  runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
+  runners_lambda_zip                = "../lambdas-download/runners.zip"
 
   enable_organization_runners = true
-  runner_extra_labels         = ["default", "example"]
+  runner_group_name           = "Default" # only used for organization runners
+  runner_extra_labels         = ["default", "example", "fargate-dev", "dev-environment"]
 
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
@@ -49,7 +50,7 @@ module "runners" {
   # Let the module manage the service linked role
   # create_service_linked_role_spot = true
 
-  instance_types = ["m5.large", "c5.large"]
+  instance_types = ["t3.micro", "t3.small"]
 
   # override delay of events in seconds
   delay_webhook_event = 0
@@ -87,7 +88,7 @@ module "runners" {
   # ami_owners      = [data.aws_caller_identity.current.account_id]
 
   # or use the default AMI
-  # enable_userdata = true
+  enable_userdata = true
 
   # Enable debug logging for the lambda functions
   # log_level = "debug"
@@ -104,6 +105,11 @@ module "runners" {
     enable           = true
     max_attempts     = 1
     delay_in_seconds = 180
+  }
+
+  # disable EventBridge to send webhook events directly to SQS
+  eventbridge = {
+    enable = false
   }
 }
 

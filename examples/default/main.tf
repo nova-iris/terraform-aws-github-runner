@@ -46,12 +46,13 @@ module "runners" {
   # Alternatively you can set the path to the lambda zip files here.
   #
   # For example grab zip files via lambda_download
-  # webhook_lambda_zip                = "../lambdas-download/webhook.zip"
-  # runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
-  # runners_lambda_zip                = "../lambdas-download/runners.zip"
+  webhook_lambda_zip                = "../lambdas-download/webhook.zip"
+  runner_binaries_syncer_lambda_zip = "../lambdas-download/runner-binaries-syncer.zip"
+  runners_lambda_zip                = "../lambdas-download/runners.zip"
 
   enable_organization_runners = true
-  runner_extra_labels         = ["default", "example"]
+  runner_group_name           = "Default" # only used for organization runners
+  runner_extra_labels         = ["default", "example", "ec2-dev", "dev-environment"]
 
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
@@ -78,7 +79,7 @@ module "runners" {
   # Let the module manage the service linked role
   # create_service_linked_role_spot = true
 
-  instance_types = ["m7a.large", "m5.large"]
+  instance_types = ["t3.micro", "t3.small"]
 
   # override delay of events in seconds
   delay_webhook_event   = 5
@@ -106,21 +107,21 @@ module "runners" {
   #   capture_http_requests = true
   # }
 
-  enable_ami_housekeeper = true
-  ami_housekeeper_cleanup_config = {
-    ssmParameterNames = ["*/ami-id"]
-    minimumDaysOld    = 10
-    amiFilters = [
-      {
-        Name   = "name"
-        Values = ["*al2023*"]
-      }
-    ]
-  }
+  # enable_ami_housekeeper = true
+  # ami_housekeeper_cleanup_config = {
+  #   ssmParameterNames = ["*/ami-id"]
+  #   minimumDaysOld    = 10
+  #   amiFilters = [
+  #     {
+  #       Name   = "name"
+  #       Values = ["*al2023*"]
+  #     }
+  #   ]
+  # }
 
-  instance_termination_watcher = {
-    enable = true
-  }
+  # instance_termination_watcher = {
+  #   enable = true
+  # }
 
   # enable metric creation  (experimental)
   # metrics = {
